@@ -1,0 +1,129 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <Button
+            android:id="@+id/feature_oauth"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:onClick="onOauth"
+            android:text="@string/weibosdk_demo_feature_oauth" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <RelativeLayout
+            android:id="@+id/tab_view_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp" >
+
+            <ImageView
+                android:id="@+id/tab_image_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/tabbar_home_selector" />
+
+            <TextView
+                android:id="@+id/tab_text_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tab_image_home"
+                android:layout_centerHorizontal="true"
+                android:text="@string/tab_home_text"
+                android:textSize="8sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/tab_view_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            android:layout_toLeftOf="@+id/tab_add" >
+
+            <ImageView
+                android:id="@+id/tab_image_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/tabbar_messge_selector" />
+
+            <TextView
+                android:id="@+id/tab_text_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tab_image_message"
+                android:layout_centerHorizontal="true"
+                android:text="@string/tab_message_text"
+                android:textSize="8sp" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/tab_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/tabbar_compse_button_selector"
+            android:src="@drawable/tabbar_compse_bg_selector" />
+
+        <RelativeLayout
+            android:id="@+id/tab_view_discover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_toRightOf="@+id/tab_add" >
+
+            <ImageView
+                android:id="@+id/tab_image_discover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/tabbar_discover_selector" />
+
+            <TextView
+                android:id="@+id/tab_text_discover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tab_image_discover"
+                android:layout_centerHorizontal="true"
+                android:text="@string/tab_discover_text"
+                android:textSize="8sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/tab_view_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp" >
+
+            <ImageView
+                android:id="@+id/tab_image_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/tabbar_profile_selector" />
+
+            <TextView
+                android:id="@+id/tab_text_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tab_image_profile"
+                android:layout_centerHorizontal="true"
+                android:text="@string/tab_profile_text"
+                android:textSize="8sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

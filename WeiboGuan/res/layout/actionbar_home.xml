@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/market_title_tab" >
+
+    <ImageView
+        android:id="@+id/navigationbar_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/navigationbar_friend_selector" />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="王者归来之苍炎华发"
+        android:singleLine="true"
+        android:ellipsize="marquee" />
+
+    <ImageView
+        android:id="@+id/navigation_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/user_name"
+        android:src="@drawable/navigationbar_arrow_down" />
+
+    <ImageView
+        android:id="@+id/navigation_pop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+         android:layout_centerVertical="true"
+         android:layout_alignParentRight="true"
+         android:layout_marginRight="10dp"
+         android:src="@drawable/navigationbar_pop_selector"/>
+
+</RelativeLayout>

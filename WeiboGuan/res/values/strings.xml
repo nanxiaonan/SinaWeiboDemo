@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">WeiboGuan</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="weibosdk_demo_feature_oauth">微博授权</string>
+    <string name="weibosdk_demo_obtain_token_via_sso">SSO（单点登录）授权</string>
+    <string name="weibosdk_demo_obtain_token_via_signature">Web 授权</string>
+    <string name="weibosdk_demo_obtain_token_via_code">通过 Code 获取 Token</string>
+    <string name="weibosdk_demo_toast_auth_success">授权成功</string>
+    <string name="weibosdk_demo_toast_auth_failed">授权失败</string>
+    <string name="weibosdk_demo_toast_auth_canceled">取消授权</string>
+    <string name="weibosdk_demo_token_info">Tolen 信息</string>
+    <string name="weibosdk_demo_token_has_existed">Token 仍在有效期内，无需再次登录。</string>
+    <string name="weibosdk_demo_token_to_string_format_1">Token：%1$s \n有效期：%2$s</string>
+    <string name="weibosdk_demo_toast_obtain_code_failed">获取 Code 失败</string>
+    <string name="weibosdk_demo_toast_obtain_code_success">获取 Code 成功</string>
+    <string name="weibosdk_demo_toast_obtain_token_success">获取 Token 成功</string>
+    <string name="weibosdk_demo_toast_obtain_token_failed">获取 Token 失败</string>
+    <string name="tab_home_text">首页</string>
+    <string name="tab_message_text">消息</string>
+    <string name="tab_discover_text">发现</string>
+    <string name="tab_profile_text">我</string>
+    <string name="settings">设置</string>
+    <string name="write_messge">写私信</string>
+    <string name="user_description_head">简介：</string>
+    <string name="weibo_string">微博</string>
+    <string name="followers">粉丝</string>
+    <string name="friend">关注</string>
+    <string name="my_friends">我的好友</string>
+    <string name="my_photo_alarm">我的相册</string>
+    <string name="my_collect">我 的收藏</string>
+	<string name="praise">赞</string>
+	<string name="weibo_pay">微博支付</string>
+	<string name="individuation">个性化</string>
+	<string name="business_card">我的名片</string>
+	<string name="drafts">草稿箱</string>
+	<string name="topic_weibo">热门微博</string>
+	<string name="find_people">找人</string>
+	<string name="game_center">游戏中心</string>
+	<string name="app_center">应用中心</string>
+	<string name="around">周边</string>
+	<string name="view_worldcup">围观世界杯</string>
+	<string name="movie">电影</string>
+	<string name="music">音乐</string>
+	<string name="more">更多</string>
+	<string name="at_me">"@我的"</string>
+	<string name="comment">评论</string>
+	<string name="no_attention_private_message">未关注人私信</string>
+</resources>

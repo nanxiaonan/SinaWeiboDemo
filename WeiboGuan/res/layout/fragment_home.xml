@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Button
+        android:id="@+id/get_APN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="get_APN" />
+
+    <TextView
+        android:id="@+id/apn_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/get_APN"
+        android:text="APN is " />
+
+    <Button
+        android:id="@+id/get_user_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/apn_text"
+        android:text="get_user_info" />
+
+    <TextView
+        android:id="@+id/user_info_text"
+        android:layout_below="@+id/get_user_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="user info!!!!" />
+
+</RelativeLayout>
