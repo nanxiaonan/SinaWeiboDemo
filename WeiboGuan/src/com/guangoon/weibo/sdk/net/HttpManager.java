@@ -59,6 +59,7 @@ public class HttpManager {
 	private static HttpClient getNewHttpClient() {
 		try {
 			HttpParams params = new BasicHttpParams();
+			//设置TTTP版本，现在一般都是1.1
 			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 			HttpProtocolParams.setContentCharset(params, "UTF-8");
 
@@ -80,6 +81,8 @@ public class HttpManager {
 	private static SSLSocketFactory getSSLSocketFactory() {
 		if (sSSLSocketFactory == null) {
 			try {
+				sSSLSocketFactory = SSLSocketFactory.getSocketFactory();
+				/*
 				CertificateFactory cf = CertificateFactory.getInstance("X.509");
 				InputStream caInput = HttpManager.class
 						.getResourceAsStream("cacert.cer");
@@ -96,6 +99,7 @@ public class HttpManager {
 				keyStore.setCertificateEntry("ca", ca);
 
 				sSSLSocketFactory = new SSLSocketFactory(keyStore);
+				*/
 			} catch (Exception e) {
 				e.printStackTrace();
 
