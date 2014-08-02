@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.guangoon.weibo.AccessTokenKeeper;
 import com.guangoon.weibo.R;
+import com.guangoon.weibo.models.User;
 import com.guangoon.weibo.sdk.net.HttpManager;
 import com.guangoon.weibo.sdk.net.WeiboParameters;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
@@ -97,7 +98,8 @@ public class HomeFragment extends Fragment {
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
 			Log.i(TAG,result);
-			mUserInfoText.setText(result);
+			User user = User.parse(result);
+			mUserInfoText.setText(user.toString());
 		}
 		
 		
