@@ -4,26 +4,27 @@ import java.net.URL;
 
 import com.guangoon.weibo.AccessTokenKeeper;
 import com.guangoon.weibo.R;
+import com.guangoon.weibo.models.User;
+import com.guangoon.weibo.provider.WeiboColumn;
+import com.guangoon.weibo.sdk.net.HttpManager;
+import com.guangoon.weibo.sdk.net.WeiboParameters;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.net.RequestListener;
 import com.sina.weibo.sdk.openapi.UsersAPI;
-import com.sina.weibo.sdk.openapi.models.ErrorInfo;
-import com.sina.weibo.sdk.openapi.models.User;
-import com.sina.weibo.sdk.utils.LogUtil;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ProfileFragment extends Fragment {
 	private static final String TAG = "ProfileFragment";
@@ -35,6 +36,45 @@ public class ProfileFragment extends Fragment {
 	private Oauth2AccessToken mAccessToken;
 	/** 用户信息接口 */
 	private UsersAPI mUsersAPI;
+	private CursorLoader mUserLoader;
+	private static final int USER_CURSOR_LOADER = 1;
+	protected static final String API_SERVER = "https://api.weibo.com/2";
+	private static final String API_BASE_URL = API_SERVER + "/users";
+	private static final String User_Uri = API_BASE_URL + "/show.json";
+	private String[] mUserProjection = new String[] {
+			WeiboColumn.UserAdminColumn.ID, WeiboColumn.UserAdminColumn.IDSTR,
+			WeiboColumn.UserAdminColumn.SCREEN_NAME,
+			WeiboColumn.UserAdminColumn.NAME,
+			WeiboColumn.UserAdminColumn.ALLOW_ALL_ACT_MSG,
+			WeiboColumn.UserAdminColumn.ALLOW_ALL_COMMENT,
+			WeiboColumn.UserAdminColumn.AVATAR_HD,
+			WeiboColumn.UserAdminColumn.AVATAR_LARGE,
+			WeiboColumn.UserAdminColumn.BI_FOLLOWERS_COUNT,
+			WeiboColumn.UserAdminColumn.CITY,
+			WeiboColumn.UserAdminColumn.CREATED_AT,
+			WeiboColumn.UserAdminColumn.DESCRIPTION,
+			WeiboColumn.UserAdminColumn.DOMAIN,
+			WeiboColumn.UserAdminColumn.FAVOURITES_COUNT,
+			WeiboColumn.UserAdminColumn.FOLLOW_ME,
+			WeiboColumn.UserAdminColumn.FOLLOWERS_COUNT,
+			WeiboColumn.UserAdminColumn.FOLLOWING,
+			WeiboColumn.UserAdminColumn.FRIENDS_COUNT,
+			WeiboColumn.UserAdminColumn.GENDER,
+			WeiboColumn.UserAdminColumn.GEO_ENABLED,
+			WeiboColumn.UserAdminColumn.LANG,
+			WeiboColumn.UserAdminColumn.LOCATION,
+			WeiboColumn.UserAdminColumn.ONLINE_STATUS,
+			WeiboColumn.UserAdminColumn.PROFILE_IMAGE_URI,
+			WeiboColumn.UserAdminColumn.PROFILE_URI,
+			WeiboColumn.UserAdminColumn.PROVINCE,
+			WeiboColumn.UserAdminColumn.REMARK,
+			WeiboColumn.UserAdminColumn.STATUS,
+			WeiboColumn.UserAdminColumn.STATUSES_COUNT,
+			WeiboColumn.UserAdminColumn.URI,
+			WeiboColumn.UserAdminColumn.VERIFIED_REASON,
+			WeiboColumn.UserAdminColumn.VERIFIED_TYPE,
+			WeiboColumn.UserAdminColumn.VERIFILED,
+			WeiboColumn.UserAdminColumn.WEIHAO, };
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +83,12 @@ public class ProfileFragment extends Fragment {
 		mAccessToken = AccessTokenKeeper.readAccessToken(getActivity());
 		// 获取用户信息接口
 		mUsersAPI = new UsersAPI(mAccessToken);
+
+		mUserLoader = new CursorLoader(getActivity(),
+				WeiboColumn.UserAdminColumn.CONTENT_URI, mUserProjection, null,
+				null, null);
+		getLoaderManager().initLoader(USER_CURSOR_LOADER, null,
+				mUserLoaderCallback);
 	}
 
 	@Override
@@ -50,7 +96,6 @@ public class ProfileFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 		if (mAccessToken != null && mAccessToken.isSessionValid()) {
 			long uid = Long.parseLong(mAccessToken.getUid());
-			mUsersAPI.show(uid, mListener);
 		}
 	}
 
@@ -88,39 +133,6 @@ public class ProfileFragment extends Fragment {
 		}
 	};
 
-	private RequestListener mListener = new RequestListener() {
-		@Override
-		public void onComplete(String response) {
-			if (!TextUtils.isEmpty(response)) {
-				LogUtil.i(TAG, response);
-				// 调用 User#parse 将JSON串解析成User对象
-				User user = User.parse(response);
-				if (user != null) {
-					Toast.makeText(ProfileFragment.this.getActivity(),
-							"获取User信息成功，用户昵称：" + user.screen_name,
-							Toast.LENGTH_LONG).show();
-					mUserNameText.setText(user.name);
-					mUserDescriptionText.setText(ProfileFragment.this
-							.getActivity().getString(
-									R.string.user_description_head)
-							+ user.description);
-					new ImageDecodeAsyncTask().execute(user.profile_image_url);
-				} else {
-					Toast.makeText(ProfileFragment.this.getActivity(),
-							response, Toast.LENGTH_LONG).show();
-				}
-			}
-		}
-
-		@Override
-		public void onWeiboException(WeiboException e) {
-			LogUtil.e(TAG, e.getMessage());
-			ErrorInfo info = ErrorInfo.parse(e.getMessage());
-			Toast.makeText(ProfileFragment.this.getActivity(), info.toString(),
-					Toast.LENGTH_LONG).show();
-		}
-	};
-
 	private class ImageDecodeAsyncTask extends
 			AsyncTask<String, Integer, Bitmap> {
 
@@ -144,4 +156,85 @@ public class ProfileFragment extends Fragment {
 
 	}
 
+	private LoaderCallbacks<Cursor> mUserLoaderCallback = new LoaderCallbacks<Cursor>() {
+
+		@Override
+		public android.support.v4.content.Loader<Cursor> onCreateLoader(
+				int arg0, Bundle arg1) {
+			if (arg0 == USER_CURSOR_LOADER) {
+				return mUserLoader;
+			}
+			return null;
+		}
+
+		@Override
+		public void onLoadFinished(
+				android.support.v4.content.Loader<Cursor> loader, Cursor cursor) {
+			if (loader.getId() == USER_CURSOR_LOADER) {
+				if (cursor != null && cursor.getCount() > 0) {
+					cursor.moveToFirst();
+					mUserNameText
+							.setText(cursor.getString(cursor
+									.getColumnIndexOrThrow(WeiboColumn.UserAdminColumn.SCREEN_NAME)));
+					mUserDescriptionText
+							.setText(cursor.getString(cursor
+									.getColumnIndexOrThrow(WeiboColumn.UserAdminColumn.DESCRIPTION)));
+				}else
+				{
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							WeiboParameters p = new WeiboParameters();
+							p.put("uid", Long.parseLong(mAccessToken.getUid()));
+							p.put("access_token", mAccessToken.getToken());
+							
+							String result = HttpManager.openUrl(User_Uri, "GET", p);
+							User user = User.parse(result);
+							ContentValues values = new ContentValues();
+							values.put(WeiboColumn.UserAdminColumn.ALLOW_ALL_ACT_MSG, user.allow_all_act_msg);
+							values.put(WeiboColumn.UserAdminColumn.ALLOW_ALL_COMMENT, user.allow_all_comment);
+							values.put(WeiboColumn.UserAdminColumn.AVATAR_HD, user.avatar_hd);
+							values.put(WeiboColumn.UserAdminColumn.AVATAR_LARGE, user.avatar_large);
+							values.put(WeiboColumn.UserAdminColumn.BI_FOLLOWERS_COUNT, user.bi_followers_count);
+							values.put(WeiboColumn.UserAdminColumn.CITY, user.city);
+							values.put(WeiboColumn.UserAdminColumn.CREATED_AT, user.created_at);
+							values.put(WeiboColumn.UserAdminColumn.DESCRIPTION, user.description);
+							values.put(WeiboColumn.UserAdminColumn.DOMAIN, user.domain);
+							values.put(WeiboColumn.UserAdminColumn.FAVOURITES_COUNT, user.favourites_count);
+							values.put(WeiboColumn.UserAdminColumn.FOLLOW_ME, user.follow_me);
+							values.put(WeiboColumn.UserAdminColumn.FOLLOWERS_COUNT, user.followers_count);
+							values.put(WeiboColumn.UserAdminColumn.FOLLOWING, user.following);
+							values.put(WeiboColumn.UserAdminColumn.FRIENDS_COUNT, user.friends_count);
+							values.put(WeiboColumn.UserAdminColumn.GENDER, user.gender);
+							values.put(WeiboColumn.UserAdminColumn.GEO_ENABLED, user.geo_enabled);
+							values.put(WeiboColumn.UserAdminColumn.ID, user.id);
+							values.put(WeiboColumn.UserAdminColumn.IDSTR, user.idstr);
+							values.put(WeiboColumn.UserAdminColumn.LANG, user.lang);
+							values.put(WeiboColumn.UserAdminColumn.LOCATION, user.location);
+							values.put(WeiboColumn.UserAdminColumn.NAME, user.name);
+							values.put(WeiboColumn.UserAdminColumn.ONLINE_STATUS, user.online_status);
+							values.put(WeiboColumn.UserAdminColumn.PROFILE_IMAGE_URI, user.profile_image_url);
+							values.put(WeiboColumn.UserAdminColumn.PROVINCE, user.province);
+							values.put(WeiboColumn.UserAdminColumn.REMARK, user.remark);
+							values.put(WeiboColumn.UserAdminColumn.SCREEN_NAME, user.screen_name);
+							values.put(WeiboColumn.UserAdminColumn.STATUS, user.status);
+							values.put(WeiboColumn.UserAdminColumn.STATUSES_COUNT, user.statuses_count);
+							values.put(WeiboColumn.UserAdminColumn.URI, user.uri);
+							values.put(WeiboColumn.UserAdminColumn.VERIFIED_REASON, user.verified_reason);
+							values.put(WeiboColumn.UserAdminColumn.VERIFIED_TYPE, user.verified_type);
+							values.put(WeiboColumn.UserAdminColumn.VERIFILED, user.verified);	
+							getActivity().getContentResolver().insert(WeiboColumn.UserAdminColumn.CONTENT_URI,
+									values);
+						}
+					}).start();
+				}
+			}
+		}
+
+		@Override
+		public void onLoaderReset(android.support.v4.content.Loader<Cursor> arg0) {
+		}
+
+	};
 }

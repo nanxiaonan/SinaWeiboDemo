@@ -75,7 +75,7 @@ public class WeiboSqliteDatabase extends SQLiteOpenHelper {
 				+ WeiboColumn.UserColumn.ADMIN_FOLLOW + " INTEGER,"
 				+ WeiboColumn.UserColumn.ADMIN_FRIEND + " INTEGER)";
 		db.execSQL(sql);
-		sql = "CREATE TABLE " + TABLE_WEIBO_USER + "("
+		sql = "CREATE TABLE " + TABLE_WEIBO_USER_ADMIN + "("
 				+ "_id INTEGER PRIMARY KEY,"
 				+ WeiboColumn.UserAdminColumn.ID + " TEXT,"
 				+ WeiboColumn.UserAdminColumn.IDSTR + " TEXT,"
@@ -110,7 +110,7 @@ public class WeiboSqliteDatabase extends SQLiteOpenHelper {
 				+ WeiboColumn.UserAdminColumn.FOLLOW_ME + " INTEGER,"
 				+ WeiboColumn.UserAdminColumn.ONLINE_STATUS + " INTEGER,"
 				+ WeiboColumn.UserAdminColumn.BI_FOLLOWERS_COUNT + " INTEGER,"
-				+ WeiboColumn.UserAdminColumn.LANG + "TEXT)";
+				+ WeiboColumn.UserAdminColumn.LANG + " TEXT)";
 		db.execSQL(sql);
 	}
 

@@ -40,6 +40,11 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="com.guangoon.weibo.provider.WeiboContentProvider"
+            android:authorities="com.guangoon.weibo.provider" >
+        </provider>
     </application>
 
 </manifest>

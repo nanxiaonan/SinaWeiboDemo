@@ -1,9 +1,14 @@
 package com.guangoon.weibo.provider;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class WeiboColumn {
-	static final class WeiboInfoColumn implements BaseColumns {
+	public static final String AUTHORYITY = "com.guangoon.weibo.provider";
+
+	public static final class WeiboInfoColumn implements BaseColumns {
+		public static final Uri CONTENT_URI = Uri.parse("content://"
+				+ AUTHORYITY + "/" + WeiboSqliteDatabase.TABLE_WEIBO_INFO);
 		public static final String CREATE_TIME = "create_time";
 		public static final String BLOG_ID = "blog_id";
 		public static final String BLOG_MID = "blog_mid";
@@ -22,8 +27,10 @@ public class WeiboColumn {
 		public static final String COMMENTS_COUNT = "comments_count";
 		public static final String ATTITUDES_COUNT = "attitudes_count";
 	}
-	
-	static final class UserColumn implements BaseColumns{
+
+	public static final class UserColumn implements BaseColumns {
+		public static final Uri CONTENT_URI = Uri.parse("content://"
+				+ AUTHORYITY + "/" + WeiboSqliteDatabase.TABLE_WEIBO_USER);
 		public static final String ID = "id";
 		public static final String IDSTR = "idstr";
 		public static final String SCREEN_NAME = "screen_name";
@@ -61,8 +68,11 @@ public class WeiboColumn {
 		public static final String ADMIN_FOLLOW = "admin_follow";
 		public static final String ADMIN_FRIEND = "admin_friend";
 	}
-	
-	static final class UserAdminColumn implements BaseColumns{
+
+	public static final class UserAdminColumn implements BaseColumns {
+		public static final Uri CONTENT_URI = Uri
+				.parse("content://" + AUTHORYITY + "/"
+						+ WeiboSqliteDatabase.TABLE_WEIBO_USER_ADMIN);
 		public static final String ID = "id";
 		public static final String IDSTR = "idstr";
 		public static final String SCREEN_NAME = "screen_name";
