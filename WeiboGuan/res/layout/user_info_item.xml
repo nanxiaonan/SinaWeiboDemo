@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+    <ImageView 
+        android:id="@+id/user_image"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_centerVertical="true"
+        />
+    <TextView 
+        android:id="@+id/screen_name"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/user_image"
+        />
+    <TextView 
+        android:id="@+id/user_last_weibo_text"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+         android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/user_image"
+        android:layout_below="@+id/screen_name"
+        />
+    <ImageView 
+        android:id="@+id/friendship" 
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/card_icon_attention"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        />
+
+</RelativeLayout>
