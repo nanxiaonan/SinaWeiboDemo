@@ -79,7 +79,6 @@ public class User {
 			jsonObject = new JSONObject(jsonString);
 			return parse(jsonObject);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

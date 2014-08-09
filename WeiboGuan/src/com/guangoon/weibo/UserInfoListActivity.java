@@ -16,6 +16,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Loader;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,15 +28,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.guangoon.weibo.models.User;
+import com.guangoon.weibo.models.WeiboInfo;
+import com.guangoon.weibo.models.UserInfoItem;
 import com.guangoon.weibo.sdk.net.HttpManager;
 import com.guangoon.weibo.sdk.net.WeiboParameters;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 @SuppressLint("NewApi")
-public class UserInfoListActivity extends Activity implements
-		LoaderCallbacks<List<User>> {
+public class UserInfoListActivity extends Activity implements LoaderCallbacks<List<UserInfoItem>>{
 	private static final String TAG = "UserInfoListActivity";
 	private static final String FFIENDS_URI = "https://api.weibo.com/2/friendships/friends.json";
+	private static final String WEIBO_URI = "https://api.weibo.com/2/statuses/show.json";
 	private static final int LOADER_FRIENDS_ID = 1;
 	private static int mFriendCount;
 	private static String mScreenName;
@@ -58,7 +61,7 @@ public class UserInfoListActivity extends Activity implements
 		Log.i(TAG, "mFriendCount == " + mFriendCount);
 		Log.i(TAG, "mScreenName ==" + mScreenName);
 		if (mScreenName != null && mFriendCount > 0) {
-			getLoaderManager().initLoader(LOADER_FRIENDS_ID, null, this);
+			 getLoaderManager().initLoader(LOADER_FRIENDS_ID, null, this);
 		}
 
 	}
@@ -68,14 +71,15 @@ public class UserInfoListActivity extends Activity implements
 		super.onDestroy();
 	}
 
-	private static class FriendsLoader extends AsyncTaskLoader<List<User>> {
+	public  static class FriendsLoader extends
+			AsyncTaskLoader<List<UserInfoItem>> {
 
 		public FriendsLoader(Context context) {
 			super(context);
 		}
 
 		@Override
-		public List<User> loadInBackground() {
+		public List<UserInfoItem> loadInBackground() {
 			WeiboParameters p = new WeiboParameters();
 			p.put("uid", Long.parseLong(mAccessToken.getUid()));
 			p.put("access_token", mAccessToken.getToken());
@@ -83,29 +87,35 @@ public class UserInfoListActivity extends Activity implements
 			p.put("count", mFriendCount);
 
 			String result = HttpManager.openUrl(FFIENDS_URI, "GET", p);
-			List<User> usersList = new ArrayList<User>();
+			List<UserInfoItem> usersItemList = new ArrayList<UserInfoItem>();
 			try {
 				JSONObject usersObject = new JSONObject(result);
 				JSONArray usersArray = usersObject.getJSONArray("users");
-				Log.i(TAG, "user count=====" + usersArray.length());
-				Log.i(TAG,
-						"next_cursor====" + usersObject.getInt("next_cursor"));
-				Log.i(TAG,
-						"previous_cursor===="
-								+ usersObject.getInt("previous_cursor"));
 				for (int i = 0; i < usersArray.length(); i++) {
-					Log.i(TAG,"=================hhh==== "+ usersArray.getJSONObject(i));
+					UserInfoItem item = new UserInfoItem();
 					User user = User.parse(usersArray.getJSONObject(i));
-					 Log.i(TAG,"==================" + usersArray.length()
-					 +"==========================================");
-					Log.i(TAG,user.toString());
-					 Log.i(TAG,"============================================================");
-					usersList.add(user);
+					if(Util.isNum(user.status)){
+						WeiboParameters pw = new WeiboParameters();
+						//pw.put("uid", Long.parseLong(mAccessToken.getUid()));
+						pw.put("access_token", mAccessToken.getToken());		
+						pw.put("id", Long.parseLong(user.status));
+						String weiboResult = HttpManager.openUrl(WEIBO_URI, "GET", pw);
+						Log.i(TAG,weiboResult);
+						item.weiboInfo  = WeiboInfo.parse(weiboResult);
+					}
+					URL url = new URL(user.avatar_large);
+					item.bitmap = BitmapFactory.decodeStream(url.openStream());
+					item.user = user;
+					usersItemList.add(item);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			return usersList;
+			return usersItemList;
 		}
 
 		@Override
@@ -115,26 +125,11 @@ public class UserInfoListActivity extends Activity implements
 		}
 	}
 
-	@Override
-	public Loader<List<User>> onCreateLoader(int id, Bundle args) {
-		return new FriendsLoader(this);
-	}
-
-	@Override
-	public void onLoadFinished(Loader<List<User>> loader, List<User> data) {
-		mAdapter.setList(data);
-	}
-
-	@Override
-	public void onLoaderReset(Loader<List<User>> loader) {
-
-	}
-
 	private class UserInfoAdapter extends BaseAdapter {
-		private List<User> mList = new ArrayList<User>();
+		private List<UserInfoItem> mList = new ArrayList<UserInfoItem>();
 
-		public void setList(List<User> list) {
-			mList = list;
+		public void setList(List<UserInfoItem> list) {
+			mList = new ArrayList<UserInfoItem>(list);
 			notifyDataSetChanged();
 		}
 
@@ -144,7 +139,7 @@ public class UserInfoListActivity extends Activity implements
 		}
 
 		@Override
-		public User getItem(int position) {
+		public UserInfoItem getItem(int position) {
 			return mList.get(position);
 		}
 
@@ -165,23 +160,30 @@ public class UserInfoListActivity extends Activity implements
 					.findViewById(R.id.user_last_weibo_text);
 			ImageView userImage = (ImageView) convertView
 					.findViewById(R.id.user_image);
-			screenName.setText(getItem(position).screen_name);
-			lastWeiboText.setText(getItem(position).screen_name);
-			/*
-			URL url;
-			try {
-				url = new URL(getItem(position).avatar_large);
-				userImage.setImageBitmap(BitmapFactory.decodeStream(url
-						.openStream()));
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(getItem(position).user.screen_name != null){
+				screenName.setText(getItem(position).user.screen_name);
 			}
-			*/
+			if(null != getItem(position).weiboInfo){
+				lastWeiboText.setText(getItem(position).weiboInfo.text);
+			}
+			userImage.setImageBitmap(getItem(position).bitmap);
 			return convertView;
 		}
 
 	}
 
+	@Override
+	public Loader<List<UserInfoItem>> onCreateLoader(int id, Bundle args) {
+		return new FriendsLoader(this);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<UserInfoItem>> loader, List<UserInfoItem> data) {
+		mAdapter.setList(data);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<List<UserInfoItem>> loader) {
+		
+	}
 }
