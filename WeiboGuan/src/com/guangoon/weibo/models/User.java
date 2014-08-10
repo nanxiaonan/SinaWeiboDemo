@@ -22,7 +22,7 @@ public class User {
 	public String description;
 	// 用户博客地址
 	public String uri;
-	// profile_image_url
+	// 用户头像地址（中图），50×50像素
 	public String profile_image_url;
 	// 用户的微博统一URL地址
 	public String profile_url;
@@ -68,7 +68,7 @@ public class User {
 	public boolean follow_me;
 	// 用户的在线状态，0：不在线、1：在线
 	public int online_status;
-	// bi_followers_count
+	// 用户的互粉数
 	public int bi_followers_count;
 	// 用户当前的语言版本，zh-cn：简体中文，zh-tw：繁体中文，en：英语
 	public String lang;

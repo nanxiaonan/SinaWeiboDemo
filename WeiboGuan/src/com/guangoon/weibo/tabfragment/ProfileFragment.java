@@ -19,9 +19,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.guangoon.weibo.AccessTokenKeeper;
+import com.guangoon.weibo.PersonDetailActivty;
 import com.guangoon.weibo.R;
 import com.guangoon.weibo.UserInfoListActivity;
 import com.guangoon.weibo.models.User;
+import com.guangoon.weibo.provider.ProviderConfig;
 import com.guangoon.weibo.provider.WeiboColumn;
 import com.guangoon.weibo.sdk.net.HttpManager;
 import com.guangoon.weibo.sdk.net.WeiboParameters;
@@ -37,6 +39,7 @@ public class ProfileFragment extends Fragment {
 	private TextView mWeiboCountText;
 	private TextView mUserFriendNum;
 	private TextView mUserFollowers;
+	private View mLayoutWeibo;
 	/** 当前 Token 信息 */
 	private Oauth2AccessToken mAccessToken;
 	/** 用户信息接口 */
@@ -46,40 +49,6 @@ public class ProfileFragment extends Fragment {
 	protected static final String API_SERVER = "https://api.weibo.com/2";
 	private static final String API_BASE_URL = API_SERVER + "/users";
 	private static final String User_Uri = API_BASE_URL + "/show.json";
-	private String[] mUserProjection = new String[] {
-			WeiboColumn.UserAdminColumn.ID, WeiboColumn.UserAdminColumn.IDSTR,
-			WeiboColumn.UserAdminColumn.SCREEN_NAME,
-			WeiboColumn.UserAdminColumn.NAME,
-			WeiboColumn.UserAdminColumn.ALLOW_ALL_ACT_MSG,
-			WeiboColumn.UserAdminColumn.ALLOW_ALL_COMMENT,
-			WeiboColumn.UserAdminColumn.AVATAR_HD,
-			WeiboColumn.UserAdminColumn.AVATAR_LARGE,
-			WeiboColumn.UserAdminColumn.BI_FOLLOWERS_COUNT,
-			WeiboColumn.UserAdminColumn.CITY,
-			WeiboColumn.UserAdminColumn.CREATED_AT,
-			WeiboColumn.UserAdminColumn.DESCRIPTION,
-			WeiboColumn.UserAdminColumn.DOMAIN,
-			WeiboColumn.UserAdminColumn.FAVOURITES_COUNT,
-			WeiboColumn.UserAdminColumn.FOLLOW_ME,
-			WeiboColumn.UserAdminColumn.FOLLOWERS_COUNT,
-			WeiboColumn.UserAdminColumn.FOLLOWING,
-			WeiboColumn.UserAdminColumn.FRIENDS_COUNT,
-			WeiboColumn.UserAdminColumn.GENDER,
-			WeiboColumn.UserAdminColumn.GEO_ENABLED,
-			WeiboColumn.UserAdminColumn.LANG,
-			WeiboColumn.UserAdminColumn.LOCATION,
-			WeiboColumn.UserAdminColumn.ONLINE_STATUS,
-			WeiboColumn.UserAdminColumn.PROFILE_IMAGE_URI,
-			WeiboColumn.UserAdminColumn.PROFILE_URI,
-			WeiboColumn.UserAdminColumn.PROVINCE,
-			WeiboColumn.UserAdminColumn.REMARK,
-			WeiboColumn.UserAdminColumn.STATUS,
-			WeiboColumn.UserAdminColumn.STATUSES_COUNT,
-			WeiboColumn.UserAdminColumn.URI,
-			WeiboColumn.UserAdminColumn.VERIFIED_REASON,
-			WeiboColumn.UserAdminColumn.VERIFIED_TYPE,
-			WeiboColumn.UserAdminColumn.VERIFILED,
-			WeiboColumn.UserAdminColumn.WEIHAO, };
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -90,7 +59,7 @@ public class ProfileFragment extends Fragment {
 		mUsersAPI = new UsersAPI(mAccessToken);
 
 		mUserLoader = new CursorLoader(getActivity(),
-				WeiboColumn.UserAdminColumn.CONTENT_URI, mUserProjection, null,
+				WeiboColumn.UserAdminColumn.CONTENT_URI, ProviderConfig.UserProjection, null,
 				null, null);
 		getLoaderManager().initLoader(USER_CURSOR_LOADER, null,
 				mUserLoaderCallback);
@@ -134,6 +103,14 @@ public class ProfileFragment extends Fragment {
 				startActivity(intent);
 			}
 		});
+		
+		mLayoutWeibo = rootView.findViewById(R.id.layout_weibo);
+		mLayoutWeibo.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
 		return rootView;
 	}
 
@@ -143,6 +120,7 @@ public class ProfileFragment extends Fragment {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.user_info_view:
+				getActivity().startActivity(new Intent(getActivity(),PersonDetailActivty.class));
 				break;
 
 			default:
