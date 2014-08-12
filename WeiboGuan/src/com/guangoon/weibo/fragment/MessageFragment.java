@@ -1,4 +1,4 @@
-package com.guangoon.weibo.tabfragment;
+package com.guangoon.weibo.fragment;
 
 import java.util.ArrayList;
 import java.util.List;

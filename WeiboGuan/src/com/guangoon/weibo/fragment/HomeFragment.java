@@ -1,4 +1,4 @@
-package com.guangoon.weibo.tabfragment;
+package com.guangoon.weibo.fragment;
 
 import org.apache.http.HttpHost;
 

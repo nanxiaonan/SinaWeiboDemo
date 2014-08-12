@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:layout_toLeftOf="@+id/user_descrition_more" />
+                android:text="sdfsdfsdfssssssssssssssssssssssss"/>
 
             <ImageButton
                 android:id="@+id/user_descrition_more"
@@ -128,7 +128,9 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content" 
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
 
             <LinearLayout
                 android:id="@+id/edit_detail"
@@ -151,6 +153,91 @@
                     android:text="编辑资料" />
             </LinearLayout>
         </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:background="@drawable/userinfo_navigationbar_background">
+
+            <RelativeLayout
+                android:id="@+id/fragment_first_page_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/fragment_weibo_tab" 
+                android:layout_marginRight="30dp">
+
+                <TextView
+                    android:id="@+id/text_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                     android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/person_first_page"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/home_button_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/fragment_weibo_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" >
+
+                <TextView
+                    android:id="@+id/text_weibo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                      android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/weibo_string" 
+                    android:textSize="18sp"/>
+
+                <ImageView
+                    android:id="@+id/weibo_buttom_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/fragment_photo_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/fragment_weibo_tab"
+                android:layout_marginLeft="30dp" >
+
+                <TextView
+                    android:id="@+id/text_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/person_photo_alarm" 
+                    android:textSize="18sp"/>
+
+                <ImageView
+                    android:id="@+id/image_buttom_line"
+                    android:layout_width="30dp"
+                    android:layout_height="3dp"
+                    android:layout_alignParentBottom="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+        <FrameLayout
+            android:id="@+id/framelayout_person"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent">
+        </FrameLayout>
     </LinearLayout>
 
 </ScrollView>

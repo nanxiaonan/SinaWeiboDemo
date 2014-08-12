@@ -14,10 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.guangoon.weibo.tabfragment.DiscoverFragment;
-import com.guangoon.weibo.tabfragment.HomeFragment;
-import com.guangoon.weibo.tabfragment.MessageFragment;
-import com.guangoon.weibo.tabfragment.ProfileFragment;
+import com.guangoon.weibo.fragment.DiscoverFragment;
+import com.guangoon.weibo.fragment.HomeFragment;
+import com.guangoon.weibo.fragment.MessageFragment;
+import com.guangoon.weibo.fragment.ProfileFragment;
 
 @SuppressLint("NewApi")
 public class MainActivity extends FragmentActivity {
