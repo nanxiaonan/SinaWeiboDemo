@@ -54,8 +54,8 @@ public class WeiboInfo {
 	// 微博流内的推广微博ID
 	public String ad;
 	
-	public User userInfo;
-	public Geo geoInfo;
+	//public User userInfo;
+	//public Geo geoInfo;
 
 	public static WeiboInfo parse(String jsonString) {
 		JSONObject jsonObject;
@@ -94,7 +94,7 @@ public class WeiboInfo {
 		weiboInfo.geo = jsonObject.optString("geo");
 		//weiboInfo.geoInfo = Geo.parse(weiboInfo.geo);
 		weiboInfo.user = jsonObject.optString("user");
-		weiboInfo.userInfo = User.parse(weiboInfo.user);
+		//weiboInfo.userInfo = User.parse(weiboInfo.user);
 		weiboInfo.retweeted_status = jsonObject.optString("retweeted_status");
 		weiboInfo.reposts_count = jsonObject.optInt("reposts_count");
 		weiboInfo.comments_counts = jsonObject.optInt("comments_counts");

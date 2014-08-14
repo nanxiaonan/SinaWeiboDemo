@@ -55,7 +55,6 @@ public class WeiboContentProvider extends ContentProvider {
 	@Override
 	public int bulkInsert(Uri uri, ContentValues[] values) {
         SqlArguments args = new SqlArguments(uri);
-
         SQLiteDatabase db = mWiWeiboSqliteDatabase.getWritableDatabase();
         db.beginTransaction();
         try {
