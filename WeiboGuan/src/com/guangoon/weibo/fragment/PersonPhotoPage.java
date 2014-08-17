@@ -3,7 +3,6 @@ package com.guangoon.weibo.fragment;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 @SuppressLint("NewApi")
 public class PersonPhotoPage extends Fragment implements
@@ -44,7 +42,7 @@ public class PersonPhotoPage extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.i(TAG, OwnerUserInfo.getInstance(getActivity()).toString());
+		Log.i(TAG,"==============onCreate============");
 		mAccessToken = AccessTokenKeeper.readAccessToken(getActivity());
 		getLoaderManager().initLoader(1, null, this);
 
@@ -72,6 +70,7 @@ public class PersonPhotoPage extends Fragment implements
 
 	@Override
 	public Loader<List<WeiboInfo>> onCreateLoader(int id, Bundle args) {
+		Log.i(TAG, "onCreateLoader");
 		if (id == 1) {
 			WeiboParameters params = new WeiboParameters();
 			params.put("access_token", mAccessToken.getToken());
@@ -86,9 +85,11 @@ public class PersonPhotoPage extends Fragment implements
 	@Override
 	public void onLoadFinished(Loader<List<WeiboInfo>> loader,
 			List<WeiboInfo> data) {
+		Log.i(TAG, "onLoadFinished");
+		Thread.dumpStack();
 		List<String> mThumbnalUrls = new ArrayList<String>();
 		for (WeiboInfo weiboInfo : data) {
-			mThumbnalUrls.addAll(ModelUtil.getPicUriList(weiboInfo));
+			mThumbnalUrls.addAll(ModelUtil.getBmiddle_pic(weiboInfo));
 		}
 		mImageAdapter.addUris(mThumbnalUrls);
 		Log.i(TAG, "mImageAdapter.Size()====" + mImageAdapter.getCount());
@@ -96,7 +97,7 @@ public class PersonPhotoPage extends Fragment implements
 
 	@Override
 	public void onLoaderReset(Loader<List<WeiboInfo>> loader) {
-
+		Log.i(TAG, "onLoaderReset");
 	}
 
 	private class ImageAdapter extends BaseAdapter {
@@ -188,8 +189,6 @@ public class PersonPhotoPage extends Fragment implements
 		// Raw height and width of image
 		final int height = options.outHeight;
 		final int width = options.outWidth;
-		Log.i(TAG,"options.outHeigh==" + height);
-		Log.i(TAG,"options.outHeigh==" + width);
 		int inSampleSize = 1;
 
 		if (height > reqHeight || width > reqWidth) {

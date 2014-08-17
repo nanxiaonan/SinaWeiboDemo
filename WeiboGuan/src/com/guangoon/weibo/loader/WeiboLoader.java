@@ -27,8 +27,8 @@ public class WeiboLoader extends AsyncTaskLoader<List<WeiboInfo>> {
 
 	@Override
 	public List<WeiboInfo> loadInBackground() {
+		Log.i(TAG,"=====loadInBackground===");
 		String result =  HttpManager.openUrl("https://api.weibo.com/2/statuses/user_timeline.json", "GET", mWiboParameters);
-		Log.i(TAG,"result===" + result);
 		List<WeiboInfo> weiboInfoList = new ArrayList<WeiboInfo>();
 		try {
 			JSONObject statusObject = new JSONObject(result);
@@ -46,7 +46,10 @@ public class WeiboLoader extends AsyncTaskLoader<List<WeiboInfo>> {
 	@Override
 	protected void onStartLoading() {
 		super.onStartLoading();
-		forceLoad();
+		Log.i(TAG,"=====onStartLoading===");
+		Log.i(TAG,"isReset()===" + isReset());
+		Log.i(TAG,"isStarted()===" + isStarted());
+			forceLoad();
 	}
 	
 	
