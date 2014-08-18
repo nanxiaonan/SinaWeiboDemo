@@ -11,7 +11,6 @@ import com.guangoon.weibo.AccessTokenKeeper;
 import com.guangoon.weibo.R;
 import com.guangoon.weibo.loader.WeiboLoader;
 import com.guangoon.weibo.models.ModelUtil;
-import com.guangoon.weibo.models.OwnerUserInfo;
 import com.guangoon.weibo.models.WeiboInfo;
 import com.guangoon.weibo.sdk.net.WeiboParameters;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
@@ -25,6 +24,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +102,30 @@ public class PersonPhotoPage extends Fragment implements
 
 	private class ImageAdapter extends BaseAdapter {
 		private List<String> mImageUris = new ArrayList<String>();
+		private LruCache<String, Bitmap> mImageCaches;
+		public ImageAdapter(){
+			final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+			final int cacheSize = maxMemory / 8;
+			Log.i(TAG,"cacheSize===" + cacheSize);
+			mImageCaches = new LruCache<String, Bitmap>(cacheSize){
 
+				@Override
+				protected int sizeOf(String key, Bitmap value) {
+					return value.getByteCount()/1024;
+				}
+				
+			};
+		}
+		
+		public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+		    if (getBitmapFromMemCache(key) == null) {
+		    	mImageCaches.put(key, bitmap);
+		    }
+		}
+		
+		public Bitmap getBitmapFromMemCache(String key) {
+		    return mImageCaches.get(key);
+		}
 		@Override
 		public int getCount() {
 			return mImageUris.size();
@@ -125,12 +148,18 @@ public class PersonPhotoPage extends Fragment implements
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			Log.i(TAG,"getView=======position==" + position);
 			if (convertView == null) {
-				convertView = new ImageView(getActivity());
+				convertView = View.inflate(getActivity(), R.layout.weibo_photo_item, null);
 			}
-			((ImageView) convertView)
-					.setImageResource(R.drawable.compose_photo_stroke);
-			new ImageAsyncTask((ImageView) convertView).execute(getItem(position));
+			ImageView imageView = (ImageView)convertView.findViewById(R.id.photo_item);
+			imageView.setBackgroundResource(R.drawable.compose_pic_background);
+			Bitmap bitmap = getBitmapFromMemCache(getItem(position));
+			if(bitmap != null){
+				imageView.setImageBitmap(bitmap);
+			}else{
+				new ImageAsyncTask(imageView).execute(getItem(position));
+			}
 			return convertView;
 		}
 	}
@@ -154,13 +183,13 @@ public class PersonPhotoPage extends Fragment implements
 			{
 				mImageWeakReference.get().setImageBitmap(result);
 			}
-
 		}
 
 		@Override
 		protected Bitmap doInBackground(String... params) {
-
-			return decodeBitmapFromUri(params[0], 200, 200);
+			Bitmap bitmap  = decodeBitmapFromUri(params[0], 120, 120);
+			mImageAdapter.addBitmapToMemoryCache(params[0], bitmap);
+			return bitmap;
 		}
 	}
 
@@ -174,6 +203,7 @@ public class PersonPhotoPage extends Fragment implements
 			BitmapFactory.decodeStream(url.openStream(), null, options);
 			options.inSampleSize = calculateInSampleSize(options, reqWidth,
 					reqHeight);
+			//options.
 			options.inJustDecodeBounds = false;
 			return BitmapFactory.decodeStream(url.openStream(), null, options);
 		} catch (MalformedURLException e) {

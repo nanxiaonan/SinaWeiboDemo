@@ -20,6 +20,7 @@ import com.guangoon.weibo.sdk.net.WeiboParameters;
 public class WeiboLoader extends AsyncTaskLoader<List<WeiboInfo>> {
 	private static final String TAG ="WeiboLoader";
 	private WeiboParameters mWiboParameters;
+	private List<WeiboInfo> mWeiboInfoList;
 	public WeiboLoader(Context context,WeiboParameters params) {
 		super(context);
 		mWiboParameters = params;
@@ -49,8 +50,23 @@ public class WeiboLoader extends AsyncTaskLoader<List<WeiboInfo>> {
 		Log.i(TAG,"=====onStartLoading===");
 		Log.i(TAG,"isReset()===" + isReset());
 		Log.i(TAG,"isStarted()===" + isStarted());
+		if(takeContentChanged() || mWeiboInfoList == null)
+		{
 			forceLoad();
+		}
+		
 	}
+
+	@Override
+	public void deliverResult(List<WeiboInfo> data) {
+		super.deliverResult(data);
+		mWeiboInfoList = data;
+		if(isStarted()){
+			super.deliverResult(data);
+		}
+	}
+	
+	
 	
 	
 
